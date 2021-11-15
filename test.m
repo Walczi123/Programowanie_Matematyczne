@@ -1,4 +1,9 @@
-function [c, A, b, d] = test(n, err_bound)
+function test(n, err_bound)
+% Funkcja testująca/porównująca otrzymane wyniki dla algortymów linprog
+% oraz własnej implementacji algorytmu sympleks
+% Input
+% n - liczba iteracj (domyślnie 100)
+% err_bound - pomijalny błąd (domyślnie 0.000001)
     if ~exist('n','var')
           n = 100;
     end
@@ -8,70 +13,52 @@ function [c, A, b, d] = test(n, err_bound)
     end
     
     counert_exitflag = 0;
-    exitflag_error = 0;
     counert_fval = 0;
     counert_det = 0;
+    counert_iter_eq= 0;
+    counert_iter_gt = 0;
+    counert_iter_lt = 0;
     counert_x = 0;
     for i = 1:n
         [c, A, b, d] = generate_instance();
 
-%         options = optimset(@linprog);
-%         options = optimset(options, 'Algorithm', 'interior-point');
-% 
-%         [linprog_x, linprog_fval, linprog_exitflag, output, lambda] = linprog(-c, A, b, [], [], d, [], [], options);
+        [linprog_x, linprog_fval, linprog_exitflag, output, ~] = linprog(-c, A, b, [], [], d);
+        [sympleks_x, sympleks_fval, sympleks_exitflag, sympleks_iter] = sympleks(c, A, b, d, 0); 
 
-        [linprog_x, linprog_fval, linprog_exitflag, output, lambda] = linprog(-c, A, b, [], [], d);
-        [symplex_x, symplex_fval, symplex_exitflag] = symplex(c, A, b, d, 0);
-        if (linprog_exitflag == 1 && symplex_exitflag == 1) || (linprog_exitflag ~= 1 && symplex_exitflag ~= 1)
+        linprog_iter = getfield(output,"iterations");
+
+        if sympleks_iter == linprog_iter
+            counert_iter_eq = counert_iter_eq + 1;
+        elseif sympleks_iter > linprog_iter
+            counert_iter_gt = counert_iter_gt + 1;
+        else
+            counert_iter_lt = counert_iter_lt + 1;
+        end
+
+        if (linprog_exitflag == 1 && sympleks_exitflag == 1) || (linprog_exitflag ~= 1 && sympleks_exitflag ~= 1)
             counert_exitflag = counert_exitflag + 1;
-%             if linprog_fval == -symplex_fval
             if linprog_exitflag == 1
                 counert_det = counert_det + 1;
-                error_fval = linprog_fval+symplex_fval;
+                error_fval = linprog_fval+sympleks_fval;
                 if error_fval < err_bound
                     counert_fval = counert_fval + 1;
-%                 else
-%                     disp('fval error');
-%                     disp(error_fval);
                 end
-                error_x = abs(linprog_x) - abs(symplex_x);
+                error_x = abs(linprog_x) - abs(sympleks_x);
                 error_x(c == 0) = 0;
                 if error_x < err_bound
                     counert_x = counert_x + 1;
-%                 else
-%                     disp('x error')
-%                     disp(error_x)
-%                     disp('c')
-%                     disp(c)
                 end
-            end
-        else
-            if (linprog_exitflag == -3 && symplex_exitflag == 1) || (linprog_exitflag == 1 && symplex_exitflag == -3)
-                exitflag_error = exitflag_error + 1
-                disp('linprog_exitflag');
-                disp(linprog_exitflag);
-                disp('symplex_exitflag');
-                disp(symplex_exitflag);
-%                 r=input('asd\n')
-%                 disp(r)
-%                 if r == 1
-%                     return;
-%                 end
-            else
-                disp('linprog_exitflag');
-                disp(linprog_exitflag);
-                disp('symplex_exitflag');
-                disp(symplex_exitflag);
-                input('asd')
             end
         end
     end
-    disp('Result exitflag');
-    disp(counert_exitflag/n);
-    disp('Error exitflag');
-    disp(exitflag_error/n);
-    disp('Result fval');
-    disp(counert_fval/counert_det);
-    disp('Result x');
-    disp(counert_x/counert_det);
+    disp('===========================')
+    fprintf('Linprog and my simplex get the same exitflag in %0.2f %%\n', counert_exitflag/n * 100);
+    fprintf('Linprog and my simplex get the different exitflag in %0.2f %%\n', (1 - counert_exitflag/n) * 100);
+    fprintf('The number of iterations was the same in %0.2f %%\n', counert_iter_eq/n * 100);
+    fprintf('The number of iterations was greater in simplex alg. in %0.2f %%\n', counert_iter_gt/n * 100);
+    fprintf('The number of iterations was less in simplex alg. in %0.2f %%\n', counert_iter_lt/n * 100);
+    disp('When both get the same result:');
+    fprintf('The value of the function was the same in %0.2f %%\n',counert_fval/counert_det * 100);
+    fprintf('The variables was the same in %0.2f %%\n', counert_x/counert_det * 100);
+    disp('===========================')
 end
