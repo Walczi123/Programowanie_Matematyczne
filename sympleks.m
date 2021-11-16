@@ -26,6 +26,7 @@ function [x, y, exitflag, i] = sympleks(in_c, in_A, in_b, in_d, show)
     exitflag = -3;
     round_param = 5;
 
+    % Przygotowanie parametrów do obliczeń w algorymnie sympleks
     [c, A, cB, b, x_base] = prepare_parameters(in_c, in_A, in_b, in_d);
 
     i = 1;
@@ -64,7 +65,6 @@ function [x, y, exitflag, i] = sympleks(in_c, in_A, in_b, in_d, show)
         tmp_A = max(A,0);
         tmp_Ak = tmp_A(:, k);
         res = b./tmp_Ak;
-%         res = round(res, round_param);
         res(isnan(res) |  isinf(res)) = Inf;
         [res_min_val, r]  = min(res);
     
@@ -82,12 +82,10 @@ function [x, y, exitflag, i] = sympleks(in_c, in_A, in_b, in_d, show)
         b2 = b - ((A(:,k)/ark)*b(r));
         b2(r) = b(r)/ark;
         b = b2;
-%         b = round(b, round_param);
         
         A2 = A - ((A(r,:)/ark) .* A(:,k));
         A2(r,:) = A(r,:)/ark;
         A = A2;
-%         A = round(A, round_param);
         
         i = i + 1;
     end

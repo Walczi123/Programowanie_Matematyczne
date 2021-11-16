@@ -10,7 +10,7 @@ function [c, A, b, d] = run()
 
     [c, A, b, d] = generate_instance();
     [linprog_x, linprog_fval, linprog_exitflag, ~, ~] = linprog(-c, A, b, [], [], d);
-    [symplex_x, symplex_fval, symplex_exitflag] = symplex(c, A, b, d, 0);
+    [symplex_x, symplex_fval, symplex_exitflag] = sympleks(c, A, b, d, 0);
 
     linprog_x
     symplex_x
