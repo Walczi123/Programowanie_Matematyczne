@@ -1,4 +1,4 @@
-function [x, y] = calculate_solution(x_base, b, c, show)
+function ROx = calculate_rox(cB, AB, show)
 % Funkcja wylicza pierwotne wartości x oraz wylicza wartośc funkcji celu,
 % dla wprowadzonych parametrów.
 % Input
@@ -10,14 +10,8 @@ function [x, y] = calculate_solution(x_base, b, c, show)
 % x - wektor parametrów wynikowych
 % y - wartość funkcji celu dla x
     if show == 1
-        disp('calculate_solution')
+        disp('calculate_rox')
     end
-    [~,c_size] = size(c);
-    [b_size,~] = size(b);
-    x = zeros(c_size, 1);
-   
-    for i = 1:b_size
-        x(x_base(i)) = b(i);
-    end
-    y = c * x;
+    
+    ROx = cB' * AB;
 end

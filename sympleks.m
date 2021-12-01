@@ -1,4 +1,4 @@
-function [x, y, exitflag, i] = sympleks(in_c, in_A, in_b, show)
+function [ROx, ROy, exitflag, iter] = sympleks(in_c, in_A, in_b, show)
 % Funkcja implementująca algorytm sympleks dla zadania laboratoryjnego.
 % Przyjmuje parametry opisane w zadaniu.
 % Używa funkcji "prepare_parameters" oraz "calculate_solution" aby
@@ -17,79 +17,46 @@ function [x, y, exitflag, i] = sympleks(in_c, in_A, in_b, show)
 % exitflag - flaga oznaczająca znalezienie rozwiązania (jak linprog)
 % i - ilość iteracji przeprowadzonych przez alg
     if ~exist('show','var')
-          show = 1;
+          show = 0;
     end
-    
 
-    x = -inf;
-    y = -inf;
-    exitflag = -3;
-    round_param = 5;
-
+    exitflag = -1;
+    ROx = -inf;
+    ROy = -inf;
+ 
     % Przygotowanie parametrów do obliczeń w algorymnie sympleks
-    [c, A, cB, b, x_base] = prepare_parameters(in_c, in_A, in_b)
-
-    i = 1;
-    while true
-
-        z = cB' * A;
-        zc = z - c;
-        zc = round(zc, round_param);
-        [zc_min_val, k] = min(zc);
-
-        if show == 1
-            disp('=========')
-            i
-            disp('A')
-            disp(A)
-            disp('x_base')
-            disp(x_base)
-            disp('b')
-            disp(b')
-            disp('z-c')
-            disp(zc)
-%             disp('cB')
-%             disp(cB')
-            disp('=========')
-        end
+    [c, A, cB, b, x_base, artificials, c_a] = prepare_parameters(in_c, in_A, in_b);
     
-        if zc_min_val >= 0
-            if show == 1
-                disp('---optimum RO---')
-            end
-            [x, y] = calculate_solution(x_base, b, c, show);
-            exitflag = 1;
-            return;
+    len_artificials = length(artificials);
+    if len_artificials > 0
+        [y1, ~, exitflag1, iter, ~, x_base1, cB, b] = sympleks_part(c_a, A, cB, b, x_base, show);
+        if exitflag1 < 0
+             disp('---NO RO---')
+             return
         end
-        
-        tmp_A = max(A,0);
-        tmp_Ak = tmp_A(:, k);
-        res = b./tmp_Ak;
-        res(isnan(res) |  isinf(res)) = Inf;
-        [res_min_val, r]  = min(res);
-    
-        if isempty(res_min_val) | res_min_val == inf
-            if show == 1
+        for i = 1:len_artificials
+            a = artificials(i);
+            if y1(a) > 0
                 disp('---NO RO---')
-            end
-            return;
+                return
+            end    
         end
-        
-        ark = A(r, k);
-        x_base(r) = k;
-        cB(r) = c(k);
+          A(:,a) = [];
+        c(a) = [];
+        artificials = artificials - 1;
+    end
     
-        b2 = b - ((A(:,k)/ark)*b(r));
-        b2(r) = b(r)/ark;
-        b = b2;
-        
-        A2 = A - ((A(r,:)/ark) .* A(:,k));
-        A2(r,:) = A(r,:)/ark;
-        A = A2;
-        
-        i = i + 1;
+    [ROx, ~, exitflag, it, out_A, ~, cB, ~] = sympleks_part(c, A, cB, b, x_base1, show);
+    iter = iter + it;
+
+    if exitflag < 0
+         disp('---NO RO---')
+         return
     end
-    if show == 1
-        disp('end')
-    end
+    
+    
+    ROy = calculate_rox(cB, out_A, show);
+    exitflag = 1;
+
+    return;
 end
