@@ -19,11 +19,6 @@ function [x, y, exitflag, i, A, x_base, cB, b] = sympleks_part(c, A, cB, b, x_ba
 % y - wartośc funkcji dla x
 % exitflag - flaga oznaczająca znalezienie rozwiązania (jak linprog)
 % i - ilość iteracji przeprowadzonych przez alg
-% A - macierz współczynników po zakończeniu obliczeń
-% x_base - lista wektorów bazowych
-% cB - wartości funkcji celu dla wektora bazowego
-% b - wektor wartości odpowiadających wierszom z macierzy A po zakończeniu
-% obliczeń
 
     if ~exist('omit_zc','var')
           omit_zc = [];

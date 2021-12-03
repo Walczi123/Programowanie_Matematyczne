@@ -1,5 +1,5 @@
 function [x, y] = calculate_solution(x_base, b, c, show)
-% Funkcja wylicza pierwotne wartości x oraz wylicza wartośc funkcji celu,
+% Funkcja wylicza wartości x oraz wylicza wartośc funkcji celu,
 % dla wprowadzonych parametrów.
 % Input
 % x_base - wektor bazowy

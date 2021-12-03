@@ -1,21 +1,25 @@
-function [c, A, cB, b, x_base, artificials, c_a] = prepare_parameters(in_c, in_A, in_b)
+function [c, A, cB, b, x_base, artificials, c_a, cB_a] = prepare_parameters(in_c, in_A, in_b)
 % Funkcja sprowadzająca parametry wejsciowe do postaci akceptowalnej przez
-% algorytm sympleks.
+% algorytmy sympleks.
 % Input
-% in_c - wektor współczynników funkcji celu
-% in_A - macierz współczynników
-% in_b - wektor wartości odpowiadających wierszom z macierzy A
+% in_c - wektor współczynników funkcji celu ZD
+% in_A - macierz współczynników ZD
+% in_b - wektor wartości odpowiadających wierszom z macierzy A ZD
 % Ouput
-% c - wektor współczynników funkcji celu
-% A - macierz współczynników
-% cB - wektor wartości dla wektora bazowego
-% b - wektor wartości odpowiadających wierszom z macierzy A
+% c - wektor współczynników funkcji celu ZD (przekształcony)
+% A - macierz współczynników (przekształcona)
+% cB - wektor wartości dla wektora bazowego (przekształcony)
+% b - wektor wartości odpowiadających wierszom z macierzy A (przekształcony)
 % x_base - wektor indeksów parametrów bazowych
+% artificials - wektory zmiennych sztucznych
+% c_a - wektor współczynników funkcji celu dla pierwszej fazy algorytmu
+% cB_a - wektor wartości dla wektora bazowego dla pierwszej  fazy algortymu (przekształcony)
+
 c = in_c;
 c_a = zeros(1,10);
 A = in_A;
 b = in_b;
-cB = zeros(5,1);
+cB = zeros(1,5);
 x_base = zeros(5,1);
 
 artificials = [];
@@ -36,6 +40,7 @@ for i = 1:5
     end
     x_base(i) =  j;
     cB(i) = c(j);
+    cB_a(i) = c_a(j);
 end
 
 end

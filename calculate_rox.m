@@ -1,17 +1,25 @@
-function ROx = calculate_rox(cB, AB, show)
-% Funkcja wylicza pierwotne wartości x oraz wylicza wartośc funkcji celu,
-% dla wprowadzonych parametrów.
+function ROx = calculate_rox(cB, A, b, base, show)
+% Funkcja wylicza rozwiązanie optymalne zadania prymalnego na podstawie
+% wyniku zadania dualnego.
 % Input
-% x_base - wektor bazowy
-% b - wektor wartości wynikowych
-% c - wektor współczynników funkcji celu
+% cB - wartości funkcji celu z ZD dla wektora bazowego
+% A - ostateczna macierz współczynników po przekształceniach
+% b - wektor wartości prawej storny układu równań ZD
+% base - pierwotna baza ZD
 % show - parametr wyświetlania, jak w funkcji simpleks
 % Output
-% x - wektor parametrów wynikowych
-% y - wartość funkcji celu dla x
+% ROx - wektor parametrów wynikowych
     if show == 1
         disp('calculate_rox')
     end
-    
-    ROx = cB' * AB;
+
+    AB = A(:,base);
+
+    for i = 1:5
+        if b(i) < 0
+            AB(:,i) = - AB(:,i);
+        end
+    end
+
+    ROx = cB * AB;
 end
