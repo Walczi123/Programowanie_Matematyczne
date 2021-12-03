@@ -40,7 +40,7 @@ function [ROx, ROy, exitflag, iter] = sympleks(in_c, in_A, in_b, show)
             if y1(a) ~= 0
                 disp('---NO RO---')
                 return
-            end    
+            end   
         end
 
         for j = 1:5
