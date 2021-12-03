@@ -25,7 +25,7 @@ function test(n, err_bound)
 
         [d_c, d_A, d_b, ~] = transform_to_dual(c, A, b, d);
         [ROx, ~, sympleks_exitflag, sympleks_iter] = sympleks(-d_c, d_A, d_b, 0);
-        sympleks_fval = c' * ROx;
+        sympleks_fval = c * ROx';
 
         linprog_iter = getfield(output,"iterations");
 
@@ -41,11 +41,11 @@ function test(n, err_bound)
             counert_exitflag = counert_exitflag + 1;
             if linprog_exitflag == 1
                 counert_det = counert_det + 1;
-                error_fval = linprog_fval+sympleks_fval;
-                if error_fval < err_bound
+                error_fval = abs(linprog_fval)-abs(sympleks_fval);
+                if abs(error_fval) < err_bound
                     counert_fval = counert_fval + 1;
                 end
-                error_x = abs(linprog_x) - abs(ROx);
+                error_x = abs(linprog_x) - abs(ROx');
                 error_x(c == 0) = 0;
                 if error_x < err_bound
                     counert_x = counert_x + 1;

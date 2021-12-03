@@ -77,14 +77,15 @@ function print_table(c,A,b,cB, x_base, z, zc)
     fprintf('z-c' + space_v);
     len_zc = length(zc);
     for i = 1:len_c
-        if zc(i) >= 0
-            fprintf(' ');
-        end
-        if len_zc < i
-            fprintf('%d ' + space_v, zc(i));
+        if len_zc >= i
+            if zc(i) >= 0
+                fprintf(' ');
+            end
+                fprintf('%d ' + space_v, zc(i));
         else
-            fprintf('  ' + space_v);
+            fprintf('   ' + space_v);
         end
+
     end
     fprintf('\n');
 
