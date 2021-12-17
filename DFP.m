@@ -1,6 +1,6 @@
-function [xDFP,fval,it]=DFP(f, g, x0, epsilon, A, min_type, plot)
-   if ~exist('plot','var')
-          plot = 0;
+function [xDFP,fval,it]=DFP(f, g, x0, epsilon, A, min_type, plot_)
+   if ~exist('plot_','var')
+          plot_ = 0;
     end
 
     n = size(x0);
@@ -16,8 +16,8 @@ function [xDFP,fval,it]=DFP(f, g, x0, epsilon, A, min_type, plot)
             case 'analitical'
                 a = (-g(x)' * d) / (d' * A * d);
             case 'gold'
-                alpha_max = alfa_max(@(a) f(x + a * d), 0, 1);
-                [alfa_gold, ~] = gold(@(a) f(x + a * d), 0, alpha_max, 1e-4);
+                a_max = alfa_max(@(a) f(x + a * d), 0, 1);
+                [alfa_gold, ~] = gold(@(a) f(x + a * d), 0, a_max, 1e-4);
                 a = alfa_gold;
             case 'armijo'
                 [alfa_armijo, ~] = armijo(f, g, x, d, 1e-4);
@@ -33,12 +33,16 @@ function [xDFP,fval,it]=DFP(f, g, x0, epsilon, A, min_type, plot)
         H = H + dH;
         it = it + 1;
         x = x1;
+        if it > 1000
+            break;
+        end
     end
     g_norms(end + 1) = norm(g(x));
     xDFP = x;
     fval = f(x);
 
-    if plot == 1
+    if plot_ == 1
         plot([1:it + 1], g_norms);
+        title(min_type)
     end 
 end

@@ -1,4 +1,4 @@
-function zad3_1_test()
+function zad3_3_test()
     clc;
 
     p1 = -10;
@@ -15,8 +15,19 @@ function zad3_1_test()
         gold_its_part = 0;
         armijo_its_part = 0;
         for j = 1:iter
-            c = randi([p1, p2]);
-            v = c(ones(n, 1));
+            clus = [10, 20, 30, 40, 50];
+            [~, k] = size(clus);
+        
+            v = zeros(n);
+            while v == zeros(size(v))
+                v = [];
+                for i = 1 : k
+                    l = ceil((i-1) * (n/k));
+                    up = ceil(i * (n/k));
+                    c = clus(i);
+                    v = [v; c(ones(up-l, 1))];
+                end
+            end
             [A,b] = generate2(v, p1, p2);
         
             f = @(x) 1/2*x' * A* x - b' * x;

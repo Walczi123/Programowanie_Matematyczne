@@ -19,7 +19,10 @@ function run(A,b)
 %     alpha_max = 0.01; % TODO
     
 %     F = @(x, a) f(x0 + a * d0);
-    alpha_max = alfa_max(@(a) f(x0 + a * d0), alpha0, 1e-4);
+    alpha_max = alfa_max(@(a) f(x0 + a * d0), alpha0, 1e-4)
+    disp("___")
+    alpha_max2 = alfa2(@(a) f(x0 + a * d0))
+    disp("___")
     
 %     [X,FVAL,EXITFLAG] = fminbnd(F,alpha0,alpha_max,optimset('Display','iter'));
 %     [my_X, my_it] = gold(F, alpha0, alpha_max, 1e-4)
@@ -39,9 +42,9 @@ function run(A,b)
 %     [x,fval,exitflag,output,grad,hessian] = fminunc(f,x0,options) 
 
 %     DFP_min_fun = @(alpha0, alpha_max, e) gold(F, alpha0, alpha_max, e)
-    xExact =xExact
-    [xDFP,fval,it] = DFP(f, g, x0, 1e-4, A, 'gold')
+    xExact =xExact;
+    [xDFP,fval,it] = DFP(f, g, x0, 1e-4, A, 'gold');
 %     [xDFP,fval,it] = DFP_ala(f, x0, 1e-4, g, A, 'gold')
 
-    disp(norm(xExact-xDFP))
+    disp(norm(xExact-xDFP));
 end

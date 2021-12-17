@@ -1,13 +1,16 @@
-function test2(A, b)
+function zad3_2(A, b)
     clc;
-    n=20;
+    n=10;
     p1 = -10;
     p2 = 10;
-
-    c = randi([p1, p2]);
-    v = c(ones(n, 1));
-    v(end) = randi([10*p2, 20*p2]);
-    [A,b] = generate2(v, p1, p2);
+    
+    v = zeros(n);
+    while v == zeros(size(v))
+        c = randi([p1, p2]);
+        v = c(ones(n, 1));
+        v(end) = randi([10*p2, 20*p2]);
+    end
+    [A,b] = generate2(v, p1, p2)
 
     f = @(x) 1/2*x' * A* x - b' * x;
     g = @(x) A * x - b;
@@ -15,8 +18,10 @@ function test2(A, b)
         
     xExact = A' \ b;
 
-    [analitical_xDFP,analitical_fval,analitical_it] = DFP(f, g, x0, 1e-4, A, 'analitical');
-    [gold_xDFP,gold_fval,gold_it] = DFP(f, g, x0, 1e-4, A, 'gold');
-    [armijo_xDFP,armijo_fval,armijo_it] = DFP(f, g, x0, 1e-4, A, 'armijo');
+    [analitical_xDFP,analitical_fval,analitical_it] = DFP(f, g, x0, 1e-4, A, 'analitical',1);
+    figure();
+    [gold_xDFP,gold_fval,gold_it] = DFP(f, g, x0, 1e-4, A, 'gold',1);
+    figure();
+    [armijo_xDFP,armijo_fval,armijo_it] = DFP(f, g, x0, 1e-4, A, 'armijo',1);
    
 end

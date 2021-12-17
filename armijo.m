@@ -1,5 +1,4 @@
-function [alfa_armijo,it] = armijo(f, g, x, d, epsilon)
-    
+function [alfa_armijo,it] = armijo(f, g, x, d, epsilon)  
     F0 = f(x);
     F0I = g(x)' * d;
 

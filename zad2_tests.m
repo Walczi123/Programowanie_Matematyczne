@@ -36,11 +36,11 @@ function zad2_tests()
         armijo_its(end+1) = armijo_its_part/iter;
     end
 
-    disp('plot')
-    disp(analitical_its)
-    disp(gold_its)
-    disp(armijo_its)
+    disp('plot');
+    disp(analitical_its);
+    disp(gold_its);
+    disp(armijo_its);
     plot([10: 10: n_max], analitical_its, [10: 10: n_max], gold_its, [10: 10: n_max], armijo_its);
-    legend({'analitical','gold', 'armijo'},'Location','northeast')
+    legend({'analitical','gold', 'armijo'},'Location','northeast');
    
 end

@@ -5,7 +5,7 @@ function accuracy_test()
     p2 = 10;
        
     iter = 3;
-    n_max =200;
+    n_max = 200;
 
     epsilon = 1e-6;
     error = 1e-4;

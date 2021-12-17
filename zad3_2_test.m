@@ -1,4 +1,4 @@
-function zad3_1_test()
+function zad3_2_test()
     clc;
 
     p1 = -10;
@@ -15,8 +15,12 @@ function zad3_1_test()
         gold_its_part = 0;
         armijo_its_part = 0;
         for j = 1:iter
-            c = randi([p1, p2]);
-            v = c(ones(n, 1));
+            v = zeros(n);
+            while v == zeros(size(v))
+                c = randi([p1, p2]);
+                v = c(ones(n, 1));
+                v(end) = randi([10*p2, 20*p2]);
+            end
             [A,b] = generate2(v, p1, p2);
         
             f = @(x) 1/2*x' * A* x - b' * x;
@@ -38,10 +42,13 @@ function zad3_1_test()
     end
 
     disp('plot')
-    disp(analitical_its)
-    disp(gold_its)
-    disp(armijo_its)
-    plot([10: 10: n_max], analitical_its, [10: 10: n_max], gold_its, [10: 10: n_max], armijo_its);
-    legend({'analitical','gold', 'armijo'},'Location','northeast')
+    plot([10: 10: n_max], analitical_its);
+    title('analitical')
+    figure()
+    plot([10: 10: n_max], gold_its);
+    title('gold')
+    figure()
+    plot( [10: 10: n_max], armijo_its);
+    title('armijo')
    
 end

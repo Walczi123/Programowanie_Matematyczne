@@ -1,4 +1,4 @@
-function zad1()
+function [A, b] = zad1()
     clc;
     n=10;
     p1 = -10;
@@ -14,4 +14,5 @@ function zad1()
     [xFminunc,fval,exitflag,output,grad,hessian] = fminunc(f,x0,options);
 
     norm(xExact-xFminunc)
+    f(xExact)
 end
