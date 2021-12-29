@@ -2,10 +2,9 @@ function run()
     n=10;
     m=5;
 
-    [A, b, p] = generate(n, m)
-%     f = @(x) sum(power((x-p),2));
-    H = 2*eye(n);
-    f = -2 * p;
-
-    x = quadprog(H,f,[],[],A,b)
+    [A, b, p] = generate(n, m);
+    x0 = zeros([n,1]);
+    G = @(x) sum(2*x - 2*p) + 1 * (sum(2*A*x));
+    G(x0)
 end
+
