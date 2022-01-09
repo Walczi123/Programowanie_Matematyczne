@@ -18,16 +18,19 @@ function tests2(n, err_bound)
     counert_iter_lt = 0;
     counert_x = 0;
 
+    f = @(x, p) sum((x-p).^2);
     x0 = zeros([size_n,1]);
     for i = 1:n
         [A, b, p] = generate(size_n, size_m);
-        [ZFK_x, ZFK_exitflag, ZFK_iter] = ZFK(A, p, x0, 1, 10, 1e-4, 'DFP');
-        ZFK_fval = A * ZFK_x;
+        
+        [ZFK_x, ZFK_exitflag, ZFK_iter] = ZFK(A, b, p, x0, 1, 5, 1e-4, 'DFP');
+        ZFK_fval = f(ZFK_x, p);
     
         H = 2*eye(size_n);
-        f = -2 * p;   
-        [quadprog_x, quadprog_fval, quadprog_exitflag, quadprog_output] = quadprog(H,f,[],[],A,b);
+        f_quad = -2 * p;   
+        [quadprog_x, ~, quadprog_exitflag, quadprog_output] = quadprog(H,f_quad,[],[],A,b);
         quadprog_iter = getfield(quadprog_output,"iterations");
+        quadprog_fval = f(quadprog_x, p);
 
         if ZFK_iter == quadprog_iter
             counert_iter_eq = counert_iter_eq + 1;
@@ -46,7 +49,7 @@ function tests2(n, err_bound)
                     counert_fval = counert_fval + 1;
                 end
                 error_x = abs(quadprog_x) - abs(ZFK_x);
-                if error_x < err_bound
+                if abs(error_x) < err_bound
                     counert_x = counert_x + 1;
                 end
             end

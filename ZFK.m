@@ -1,6 +1,6 @@
-function [xx, exitflag, it] = ZFK(A, p, x0, r, w, e, min_type)
+function [xx, exitflag, it] = ZFK(A, b, p, x0, r, w, e, min_type)
     f = @(x) sum((x-p).^2);
-    P = @(x, r) r * (sum((A*x).^2));
+    P = @(x, r) r * (sum((A*x-b).^2));
 
     exitflag = -1;
     x = x0;
