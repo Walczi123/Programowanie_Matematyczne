@@ -1,4 +1,4 @@
-function [xDFP,fval,it]=DFP(f, g, x0, epsilon, A, min_type, plot_)
+function [xDFP,fval,it]=DFP(f, g, x0, epsilon, h, min_type, plot_)
    if ~exist('plot_','var')
           plot_ = 0;
     end
@@ -14,7 +14,7 @@ function [xDFP,fval,it]=DFP(f, g, x0, epsilon, A, min_type, plot_)
 
         switch min_type
             case 'analitical'
-                a = (-g(x) * d) / (d' * A * d);
+                a = (-g(x)' * d) / (d' * h(x) * d);
             case 'gold'
                 a_max = alfa_max(@(a) f(x + a * d), 0, 1);
                 [alfa_gold, ~] = gold(@(a) f(x + a * d), 0, a_max, 1e-4);
