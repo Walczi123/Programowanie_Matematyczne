@@ -1,0 +1,27 @@
+function [RO, f_opt, exitflag, it, LL_eqlin, LL_lower] = IPM(D, x0, e)
+    exitflag = -1;
+    x = x0;
+    sigma = 0.1; 
+    k = 0.2;
+    it = 0;
+    LL_eqlin=0;
+    LL_lower=0;
+    while ture
+        if z*x + y*w < e
+            break;
+        end
+        r = sigma * ((z' * x)/(n+m));
+        sigma = sigma * k;
+
+        d = direction();
+        a = step_lenght();
+
+        x = x + a * d(1);
+        y = y + a * d(2);
+        z = z + a * d(3);
+        it = it + 1;
+    end
+    RO = x;
+    f_opt = RO' * D * RO;
+    exitflag = 1;
+end
